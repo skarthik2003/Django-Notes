@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django REST Framework API Guide</title>
+    <style>
+        @page {
+            margin: 1in;
+        }
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        h1 {
+            color: #0c4b33;
+            font-size: 28pt;
+            margin-top: 0;
+            margin-bottom: 24pt;
+            border-bottom: 3px solid #0c4b33;
+            padding-bottom: 12pt;
+        }
+        h2 {
+            color: #0c4b33;
+            font-size: 18pt;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+        }
+        h3 {
+            color: #1a5c42;
+            font-size: 14pt;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+        h4 {
+            color: #2d6a4f;
+            font-size: 12pt;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            font-style: italic;
+        }
+        p {
+            margin: 8pt 0;
+            text-align: justify;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 10pt;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-left: 4px solid #0c4b33;
+            padding: 12pt;
+            margin: 12pt 0;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+        ul, ol {
+            margin: 8pt 0;
+            padding-left: 30pt;
+        }
+        li {
+            margin: 4pt 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8pt;
+            text-align: left;
+        }
+        th {
+            background-color: #0c4b33;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .important {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .tip {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .bad {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        a {
+            color: #0c4b33;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .section-break {
+            border-top: 2px solid #ddd;
+            margin: 24pt 0;
+        }
+        .toc {
+            background-color: #f5f5f5;
+            padding: 20pt;
+            margin: 20pt 0;
+            border-radius: 8px;
+        }
+        .toc h2 {
+            margin-top: 0;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 8pt 0;
+            padding-left: 20pt;
+            text-indent: -20pt;
+        }
+        .flow-diagram {
+            background-color: #e9ecef;
+            padding: 15pt;
+            margin: 12pt 0;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            pre, .note, .important, .tip, .success, table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Django REST Framework (DRF) - Complete API Guide</h1>
+    
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li>1. <a href="#section-1">What is an API?</a></li>
+            <li>2. <a href="#section-2">What is REST?</a></li>
+            <li>3. <a href="#section-3">Installing Django REST Framework</a></li>
+            <li>4. <a href="#section-4">DRF Serializers</a></li>
+            <li>5. <a href="#section-5">HTTP Status Codes</a></li>
+            <li>6. <a href="#section-6">The @api_view Decorator</a></li>
+            <li>7. <a href="#section-7">Function-Based Views (FBVs)</a></li>
+            <li>8. <a href="#section-8">Class-Based Views (CBVs)</a></li>
+            <li>9. <a href="#section-9">Generic Views</a></li>
+            <li>10. <a href="#section-10">ViewSets and Routers</a></li>
+            <li>11. <a href="#section-11">Authentication</a></li>
+            <li>12. <a href="#section-12">Permissions</a></li>
+            <li>13. <a href="#section-13">Token Authentication</a></li>
+            <li>14. <a href="#section-14">Custom Permissions</a></li>
+            <li>15. <a href="#section-15">Pagination</a></li>
+            <li>16. <a href="#section-16">Filtering and Search</a></li>
+            <li>17. <a href="#section-17">Best Practices</a></li>
+            <li>18. <a href="#section-18">Complete Example: Student Management API</a></li>
+            <li>19. <a href="#section-19">Testing Your API</a></li>
+            <li>20. <a href="#section-20">API Documentation Tools</a></li>
+            <li>21. <a href="#section-21">Common Patterns and Solutions</a></li>
+            <li>22. <a href="#section-22">Summary: Quick Reference</a></li>
+        </ul>
+    </div>
+    
+    <div style="page-break-after: always;"></div>
+    
+    <h2 id="section-1">1. What is an API?</h2>
+    
+    <p>An <strong>API (Application Programming Interface)</strong> lets one system communicate with another.</p>
+    
+    <h3>Example Flow</h3>
+    <p>A frontend (React or mobile app) sends a request → backend API processes it → sends back a response (usually JSON).</p>
+    
+    <div class="flow-diagram">
+        <p><strong>Frontend (React)</strong> → API Request (GET /students)</p>
+        <p>↓</p>
+        <p><strong>Backend (Django)</strong> → Returns JSON response</p>
+        <p>↓</p>
+        <p><strong>Frontend</strong> → Displays data to user</p>
+    </div>
+    
+    <h3>Why APIs?</h3>
+    <ul>
+        <li><strong>Separation of concerns:</strong> Frontend and backend can be developed independently</li>
+        <li><strong>Multiple clients:</strong> Same API can serve web, mobile, and desktop apps</li>
+        <li><strong>Scalability:</strong> Backend and frontend can scale separately</li>
+        <li><strong>Third-party integration:</strong> Other services can integrate with your application</li>
+    </ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-2">2. What is REST?</h2>
+    
+    <p><strong>REST (Representational State Transfer)</strong> is a design style for APIs. It uses HTTP methods to represent CRUD actions.</p>
+    
+    <h3>Main HTTP Methods</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Purpose</th>
+                <th>Example</th>
+                <th>CRUD Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>GET</strong></td>
+                <td>Retrieve data</td>
+                <td>/api/students/</td>
+                <td>Read</td>
+            </tr>
+            <tr>
+                <td><strong>POST</strong></td>
+                <td>Create new data</td>
+                <td>/api/students/</td>
+                <td>Create</td>
+            </tr>
+            <tr>
+                <td><strong>PUT</strong></td>
+                <td>Update all fields of an object</td>
+                <td>/api/students/1/</td>
+                <td>Update (full)</td>
+            </tr>
+            <tr>
+                <td><strong>PATCH</strong></td>
+                <td>Update only some fields</td>
+                <td>/api/students/1/</td>
+                <td>Update (partial)</td>
+            </tr>
+            <tr>
+                <td><strong>DELETE</strong></td>
+                <td>Delete data</td>
+                <td>/api/students/1/</td>
+                <td>Delete</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>RESTful Principles</h3>
+    <ul>
+        <li><strong>Stateless:</strong> Each request contains all information needed</li>
+        <li><strong>Client-Server:</strong> Clear separation between client and server</li>
+        <li><strong>Cacheable:</strong> Responses can be cached</li>
+        <li><strong>Uniform Interface:</strong> Consistent URL structure</li>
+        <li><strong>Resource-based:</strong> Everything is a resource (students, courses, etc.)</li>
+    </ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-3">3. Installing Django REST Framework</h2>
+    
+    <h3>Step 1: Install DRF</h3>
+    <pre><code>pip install django djangorestframework</code></pre>
+    
+    <h3>Step 2: Update settings.py</h3>
+    <pre><code># settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    
+    # Third-party
+    'rest_framework',
+    
+    # Your apps
+    'students',
+]</code></pre>
+    
+    <h3>Step 3: Basic DRF Configuration (Optional)</h3>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-4">4. DRF Serializers</h2>
+    
+    <h3>What is a Serializer?</h3>
+    <p>A serializer in DRF converts complex data types (like Django model instances) to Python datatypes that can be easily rendered into JSON, XML, or other content types. It also handles deserialization (converting JSON back to Django objects) and validation.</p>
+    
+    <h3>Basic Serializer Example</h3>
+    <pre><code># students/serializers.py
+from rest_framework import serializers
+from .models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'  # Include all fields
+        # Or specify specific fields:
+        # fields = ['id', 'name', 'email', 'age']</code></pre>
+    
+    <h3>Why Serializers are Powerful</h3>
+    <ul>
+        <li>✅ Converts model objects ↔ JSON (both directions)</li>
+        <li>✅ Supports data validation automatically</li>
+        <li>✅ Integrates with Views (APIView, GenericAPIView, etc.)</li>
+        <li>✅ Can customize output format</li>
+        <li>✅ Handles nested relationships</li>
+    </ul>
+    
+    <h3>Advanced Serializer Options</h3>
+    <pre><code>class StudentSerializer(serializers.ModelSerializer):
+    # Add read-only field
+    full_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Student
+        fields = ['id', 'first_name', 'last_name', 'email', 'full_name']
+        read_only_fields = ['id']  # Cannot be modified
+        extra_kwargs = {
+            'email': {'required': True},
+            'age': {'min_value': 18, 'max_value': 100}
+        }
+    
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+    
+    def validate_email(self, value):
+        if not value.endswith('@example.com'):
+            raise serializers.ValidationError("Email must be from example.com")
+        return value</code></pre>
+    <h3>Nested Serializers</h3>
+    <pre><code>class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description']
+
+class StudentSerializer(serializers.ModelSerializer):
+    courses = CourseSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Student
+        fields = ['id', 'name', 'email', 'courses']</code></pre>
+    
+    <ul><li><p>Will use for ForeignKey</p></li></ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-5">5. HTTP Status Codes</h2>
+    
+    <h3>Categories of Status Codes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Code Range</th>
+                <th>Meaning</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1xx</td>
+                <td>100–199</td>
+                <td>Informational (rarely used)</td>
+            </tr>
+            <tr>
+                <td>2xx</td>
+                <td>200–299</td>
+                <td>Success ✅</td>
+            </tr>
+            <tr>
+                <td>3xx</td>
+                <td>300–399</td>
+                <td>Redirection 🔀</td>
+            </tr>
+            <tr>
+                <td>4xx</td>
+                <td>400–499</td>
+                <td>Client error ❌</td>
+            </tr>
+            <tr>
+                <td>5xx</td>
+                <td>500–599</td>
+                <td>Server error 💥</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Success Codes (2xx)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>200 OK</strong></td>
+                <td>Request succeeded</td>
+                <td>GET /students/ returns list of students</td>
+            </tr>
+            <tr>
+                <td><strong>201 Created</strong></td>
+                <td>Resource successfully created</td>
+                <td>POST /students/ creates a new student</td>
+            </tr>
+            <tr>
+                <td><strong>204 No Content</strong></td>
+                <td>Request succeeded but no data returned</td>
+                <td>DELETE /students/1/ deletes a student</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Client Error Codes (4xx)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>400 Bad Request</strong></td>
+                <td>Request invalid or malformed</td>
+                <td>Missing required field in POST /students/</td>
+            </tr>
+            <tr>
+                <td><strong>401 Unauthorized</strong></td>
+                <td>Not authenticated</td>
+                <td>Accessing protected API without login</td>
+            </tr>
+            <tr>
+                <td><strong>403 Forbidden</strong></td>
+                <td>Authenticated but not allowed</td>
+                <td>User tries to delete someone else's data</td>
+            </tr>
+            <tr>
+                <td><strong>404 Not Found</strong></td>
+                <td>Resource doesn't exist</td>
+                <td>GET /students/999/ when student 999 doesn't exist</td>
+            </tr>
+            <tr>
+                <td><strong>405 Method Not Allowed</strong></td>
+                <td>HTTP method not supported</td>
+                <td>POST to a read-only endpoint</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Server Error Codes (5xx)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>500 Internal Server Error</strong></td>
+                <td>Something went wrong on server</td>
+                <td>Django error, database down</td>
+            </tr>
+            <tr>
+                <td><strong>502 Bad Gateway</strong></td>
+                <td>Server received invalid response from another server</td>
+                <td>Rare for local APIs</td>
+            </tr>
+            <tr>
+                <td><strong>503 Service Unavailable</strong></td>
+                <td>Server temporarily unavailable</td>
+                <td>Server maintenance</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Using Status Codes in DRF</h3>
+    <pre><code>from rest_framework import status
+from rest_framework.response import Response
+
+# Success example
+return Response({"name": "Karthik"}, status=status.HTTP_200_OK)
+
+# Created example
+return Response({"name": "New Student"}, status=status.HTTP_201_CREATED)
+
+# No content example
+return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Client error example
+return Response({"error": "Email missing"}, status=status.HTTP_400_BAD_REQUEST)
+
+# Not found example
+return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)</code></pre>
+    
+    <div class="tip">
+        <strong>Rule of Thumb:</strong>
+        <ul>
+            <li>2xx → Everything is fine ✅</li>
+            <li>4xx → Client did something wrong (check request data) ❌</li>
+            <li>5xx → Server did something wrong (check backend code, database, server) 💥</li>
+        </ul>
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-6">6. The @api_view Decorator</h2>
+    
+    <h3>What Does @api_view Do?</h3>
+    <p>The <code>@api_view</code> decorator is essential for function-based views in DRF. It:</p>
+    <ul>
+        <li>Sets up the renderer (JSON, browsable API, etc.)</li>
+        <li>Handles content negotiation</li>
+        <li>Adds request parsing (JSON, form data, etc.)</li>
+        <li>Enables the browsable API interface</li>
+        <li>Wraps the view to handle DRF's Request and Response objects</li>
+    </ul>
+    
+    <div class="important">
+        <strong>Important:</strong> Without <code>@api_view</code>, the <code>Response</code> object doesn't know how to format the output properly!
+    </div>
+    
+    <h3>Basic Usage</h3>
+    <pre><code>from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+@api_view(['GET'])
+def hello_world(request):
+    return Response({"message": "Hello, World!"})
+
+@api_view(['GET', 'POST'])
+def student_list(request):
+    if request.method == 'GET':
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-7">7. Function-Based Views (FBVs)</h2>
+    
+    <h3>Complete Example with Error Handling</h3>
+    <pre><code>from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Student
+from .serializers import StudentSerializer
+
+@api_view(['GET'])
+def test_api(request):
+    """
+    Test API endpoint to fetch a student by ID
+    """
+    # Get ID from request data
+    student_id = request.data.get("id")
+    
+    # Validation
+    if not student_id:
+        return Response(
+            {'error': 'ID is required'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if not isinstance(student_id, int):
+        return Response(
+            {'error': 'ID must be an integer'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Fetch student
+    try:
+        student = Student.objects.get(id=student_id)
+    except Student.DoesNotExist:
+        return Response(
+            {'error': f'Student with ID {student_id} not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as exc:
+        return Response(
+            {'error': str(exc)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+    # Serialize and return
+    serializer = StudentSerializer(student)
+    return Response(serializer.data, status=status.HTTP_200_OK)</code></pre>
+    
+    <h3>CRUD Operations with FBVs</h3>
+    <pre><code>@api_view(['GET', 'POST'])
+def student_list_create(request):
+    """
+    List all students or create a new student
+    """
+    if request.method == 'GET':
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def student_detail(request, pk):
+    """
+    Retrieve, update or delete a student
+    """
+    try:
+        student = Student.objects.get(pk=pk)
+    except Student.DoesNotExist:
+        return Response(
+            {'error': 'Student not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if request.method == 'GET':
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = StudentSerializer(student, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'PATCH':
+        serializer = StudentSerializer(student, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-8">8. Class-Based Views (CBVs)</h2>
+    
+    <h3>Why Class-Based Views?</h3>
+    <p>Function-based views are fine for small projects, but when your app grows (multiple endpoints, same logic repeating), you'll need more structure.</p>
+    
+    <h3>Advantages of CBVs</h3>
+    <ul>
+        <li>✅ Cleaner and reusable code</li>
+        <li>✅ Built-in methods for common patterns (GET, POST, PUT, DELETE)</li>
+        <li>✅ Easier to extend with mixins or permissions</li>
+        <li>✅ Built-in generic classes reduce boilerplate code</li>
+        <li>✅ Better organization for complex logic</li>
+    </ul>
+    
+    <h3>Basic APIView Example</h3>
+    <pre><code>from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Student
+from .serializers import StudentSerializer
+
+class StudentListView(APIView):
+    """
+    List all students or create a new student
+    """
+    def get(self, request):
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StudentDetailView(APIView):
+    """
+    Retrieve, update or delete a student
+    """
+    def get_object(self, pk):
+        try:
+            return Student.objects.get(pk=pk)
+        except Student.DoesNotExist:
+            return None
+    
+    def get(self, request, pk):
+        student = self.get_object(pk)
+        if student is None:
+            return Response(
+                {'error': 'Student not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        student = self.get_object(pk)
+        if student is None:
+            return Response(
+                {'error': 'Student not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = StudentSerializer(student, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk):
+        student = self.get_object(pk)
+        if student is None:
+            return Response(
+                {'error': 'Student not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = StudentSerializer(student, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        student = self.get_object(pk)
+        if student is None:
+            return Response(
+                {'error': 'Student not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)</code></pre>
+    
+    <h3>URL Configuration for CBVs</h3>
+    <pre><code># students/urls.py
+from django.urls import path
+from .views import StudentListView, StudentDetailView
+
+urlpatterns = [
+    path('students/', StudentListView.as_view(), name='student-list'),
+    path('students/&lt;int:pk&gt;/', StudentDetailView.as_view(), name='student-detail'),
+]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-9">9. Generic Views</h2>
+    
+    <h3>What are Generic Views?</h3>
+    <p>DRF provides generic views that include common patterns out-of-the-box, reducing even more boilerplate code.</p>
+    
+    <h3>Common Generic Views</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Generic View</th>
+                <th>Purpose</th>
+                <th>Methods</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>UpdateAPIView</code></td>
+                <td>Update-only</td>
+                <td>PUT, PATCH</td>
+            </tr>
+            <tr>
+                <td><code>DestroyAPIView</code></td>
+                <td>Delete-only</td>
+                <td>DELETE</td>
+            </tr>
+            <tr>
+                <td><code>ListCreateAPIView</code></td>
+                <td>List and create</td>
+                <td>GET, POST</td>
+            </tr>
+            <tr>
+                <td><code>RetrieveUpdateAPIView</code></td>
+                <td>Retrieve and update</td>
+                <td>GET, PUT, PATCH</td>
+            </tr>
+            <tr>
+                <td><code>RetrieveDestroyAPIView</code></td>
+                <td>Retrieve and delete</td>
+                <td>GET, DELETE</td>
+            </tr>
+            <tr>
+                <td><code>RetrieveUpdateDestroyAPIView</code></td>
+                <td>Retrieve, update, and delete</td>
+                <td>GET, PUT, PATCH, DELETE</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Using Generic Views</h3>
+    <pre><code>from rest_framework import generics
+from .models import Student
+from .serializers import StudentSerializer
+
+class StudentListCreateView(generics.ListCreateAPIView):
+    """
+    List all students or create a new student
+    Just 3 lines of code!
+    """
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete a student
+    Just 3 lines of code!
+    """
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer</code></pre>
+    
+    <div class="success">
+        <strong>Amazing!</strong> What took 50+ lines in FBVs now takes just 6 lines with Generic Views! 🎉
+    </div>
+    
+    <h3>Customizing Generic Views</h3>
+    <pre><code>class StudentListCreateView(generics.ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    def get_queryset(self):
+        """
+        Override to filter queryset
+        """
+        queryset = super().get_queryset()
+        # Filter by query parameter
+        name = self.request.query_params.get('name')
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
+    
+    def perform_create(self, serializer):
+        """
+        Override to customize creation
+        """
+        # Add custom logic before saving
+        serializer.save(created_by=self.request.user)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-10">10. ViewSets and Routers</h2>
+    
+    <h3>What is a ViewSet?</h3>
+    <p>A ViewSet is a powerful DRF class that combines:</p>
+    <ul>
+        <li>All CRUD operations (list, create, retrieve, update, delete) in one class</li>
+        <li>Automatically handled through routers – you don't need to write URLs manually!</li>
+        <li>It's like a shortcut version of ListCreateAPIView + RetrieveUpdateDestroyAPIView</li>
+    </ul>
+    
+    <h3>Basic ViewSet Example</h3>
+    <pre><code># students/views.py
+from rest_framework import viewsets
+from .models import Student
+from .serializers import StudentSerializer
+
+class StudentViewSet(viewsets.ModelViewSet):
+    """
+    A ViewSet for viewing and editing student instances.
+    Provides `list`, `create`, `retrieve`, `update`, and `destroy` actions.
+    """
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer</code></pre>
+    
+    <div class="success">
+        <strong>That's it!</strong> No need to write separate methods for get, post, put, patch, or delete – DRF generates them automatically!
+    </div>
+    
+    <h3>Registering ViewSet with Router</h3>
+    <p>Instead of adding every path manually, DRF provides a router to auto-generate routes.</p>
+    
+    <pre><code># api_learning/urls.py (main urls.py)
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from students.views import StudentViewSet
+
+# Create router and register viewsets
+router = DefaultRouter()
+router.register(r'students', StudentViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),  # Auto-generates all student routes
+]</code></pre>
+    
+    <h3>Auto-Generated Routes</h3>
+    <p>The router automatically creates:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>HTTP Method</th>
+                <th>Endpoint</th>
+                <th>Action</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td>/api/students/</td>
+                <td>list</td>
+                <td>List all students</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/students/</td>
+                <td>create</td>
+                <td>Create new student</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/students/{id}/</td>
+                <td>retrieve</td>
+                <td>Get one student</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/students/{id}/</td>
+                <td>update</td>
+                <td>Update entire student</td>
+            </tr>
+            <tr>
+                <td>PATCH</td>
+                <td>/api/students/{id}/</td>
+                <td>partial_update</td>
+                <td>Partially update student</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/students/{id}/</td>
+                <td>destroy</td>
+                <td>Delete student</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="tip">
+        <strong>💡 You didn't have to write even one line for these routes – all are auto-generated!</strong>
+    </div>
+    
+    <h3>Custom Actions in ViewSets</h3>
+    <pre><code>from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    @action(detail=False, methods=['get'])
+    def recent(self, request):
+        """
+        Custom endpoint: /api/students/recent/
+        Returns students created in last 7 days
+        """
+        recent_students = Student.objects.filter(
+            created_at__gte=timezone.now() - timedelta(days=7)
+        )
+        serializer = self.get_serializer(recent_students, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def enroll(self, request, pk=None):
+        """
+        Custom endpoint: /api/students/{id}/enroll/
+        Enroll student in a course
+        """
+        student = self.get_object()
+        course_id = request.data.get('course_id')
+        # Your enrollment logic here
+        return Response({'status': 'enrolled'})</code></pre>
+    
+    <h3>ViewSet Types</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ViewSet Type</th>
+                <th>Actions Provided</th>
+                <th>Use Case</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>ViewSet</code></td>
+                <td>None (you define all)</td>
+                <td>Maximum flexibility</td>
+            </tr>
+            <tr>
+                <td><code>GenericViewSet</code></td>
+                <td>None + generic view helpers</td>
+                <td>Mix with mixins</td>
+            </tr>
+            <tr>
+                <td><code>ModelViewSet</code></td>
+                <td>All CRUD operations</td>
+                <td>Full CRUD API (most common)</td>
+            </tr>
+            <tr>
+                <td><code>ReadOnlyModelViewSet</code></td>
+                <td>List and retrieve only</td>
+                <td>Read-only API</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-11">11. Authentication</h2>
+    
+    <h3>What is Authentication?</h3>
+    <p>Authentication verifies <strong>who the user is</strong>. DRF supports multiple authentication methods.</p>
+    
+    <h3>Common Authentication Methods</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>How It Works</th>
+                <th>Use Case</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>SessionAuthentication</strong></td>
+                <td>Uses Django's session framework</td>
+                <td>Web browsers, same-origin requests</td>
+            </tr>
+            <tr>
+                <td><strong>TokenAuthentication</strong></td>
+                <td>Uses token in Authorization header</td>
+                <td>Mobile apps, single-page apps</td>
+            </tr>
+            <tr>
+                <td><strong>BasicAuthentication</strong></td>
+                <td>Username/password in each request</td>
+                <td>Testing, simple APIs</td>
+            </tr>
+            <tr>
+                <td><strong>JWT Authentication</strong></td>
+                <td>JSON Web Tokens</td>
+                <td>Stateless auth, microservices</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Configuring Authentication in settings.py</h3>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}</code></pre>
+    
+    <h3>Per-View Authentication</h3>
+    <pre><code>from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-12">12. Permissions</h2>
+    
+    <h3>What are Permissions?</h3>
+    <p>Permissions determine <strong>what authenticated users can do</strong>. They control access after authentication.</p>
+    
+    <h3>Built-in Permission Classes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Permission</th>
+                <th>Description</th>
+                <th>When to Use</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>AllowAny</code></td>
+                <td>No restrictions, anyone can access</td>
+                <td>Public APIs, registration</td>
+            </tr>
+            <tr>
+                <td><code>IsAuthenticated</code></td>
+                <td>Only authenticated users</td>
+                <td>Protected endpoints</td>
+            </tr>
+            <tr>
+                <td><code>IsAdminUser</code></td>
+                <td>Only admin users (is_staff=True)</td>
+                <td>Admin-only operations</td>
+            </tr>
+            <tr>
+                <td><code>IsAuthenticatedOrReadOnly</code></td>
+                <td>Read for all, write for authenticated</td>
+                <td>Public viewing, protected editing</td>
+            </tr>
+            <tr>
+                <td><code>DjangoModelPermissions</code></td>
+                <td>Based on Django's model permissions</td>
+                <td>Fine-grained Django permissions</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Using Permissions in Views</h3>
+    <pre><code>from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+
+# Global setting - all views require authentication
+# (Already shown in settings.py above)
+
+# Allow anonymous access for specific view
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [AllowAny]  # No login required
+
+# Admin-only access
+class AdminStudentView(APIView):
+    permission_classes = [IsAdminUser]
+    
+    def get(self, request):
+        # Only admins can access this
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)</code></pre>
+    
+    <h3>Different Permissions for Different Methods</h3>
+    <pre><code>from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
+class StudentDetailView(APIView):
+    def get_permissions(self):
+        """
+        Different permissions for different HTTP methods
+        """
+        if self.request.method in ['POST', 'DELETE']:
+            # Only admins can create or delete
+            self.permission_classes = [IsAdminUser]
+        else:
+            # Anyone authenticated can view/update
+            self.permission_classes = [IsAuthenticated]
+        return [perm() for perm in self.permission_classes]
+    
+    def get(self, request, pk):
+        # GET logic
+        pass
+    
+    def post(self, request):
+        # POST logic (admin only)
+        pass
+    
+    def delete(self, request, pk):
+        # DELETE logic (admin only)
+        pass</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-13">13. Token Authentication</h2>
+    
+    <h3>Setup Token Authentication</h3>
+    
+    <h4>Step 1: Add to INSTALLED_APPS</h4>
+    <pre><code># settings.py
+INSTALLED_APPS = [
+    # ...
+    'rest_framework',
+    'rest_framework.authtoken',  # Add this
+    'students',
+]</code></pre>
+    
+    <h4>Step 2: Run Migrations</h4>
+    <pre><code>python manage.py migrate</code></pre>
+    
+    <h4>Step 3: Create Tokens</h4>
+    <pre><code># Method 1: Via Django admin
+# Go to http://localhost:8000/admin/authtoken/token/
+
+# Method 2: Via management command
+python manage.py drf_create_token &lt;username&gt;
+
+# Method 3: Programmatically in code
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
+user = User.objects.get(username='john')
+token = Token.objects.create(user=user)
+print(token.key)</code></pre>
+    
+    <h3>Using Token in API Requests</h3>
+    
+    <h4>With cURL</h4>
+    <pre><code>curl -X GET http://localhost:8000/api/students/ \
+     -H "Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b"</code></pre>
+    
+    <h4>With JavaScript (Fetch API)</h4>
+    <pre><code>fetch('http://localhost:8000/api/students/', {
+    method: 'GET',
+    headers: {
+        'Authorization': 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b',
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+    
+    <h4>With Python Requests</h4>
+    <pre><code>import requests
+
+headers = {
+    'Authorization': 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b'
+}
+
+response = requests.get(
+    'http://localhost:8000/api/students/', 
+    headers=headers
+)
+print(response.json())</code></pre>
+    
+    <h3>Creating Login/Logout Endpoints</h3>
+    <pre><code># views.py
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login(request):
+    """
+    User login endpoint
+    """
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    if not username or not password:
+        return Response(
+            {'error': 'Please provide both username and password'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    user = authenticate(username=username, password=password)
+    
+    if not user:
+        return Response(
+            {'error': 'Invalid credentials'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    # Get or create token
+    token, created = Token.objects.get_or_create(user=user)
+    
+    return Response({
+        'token': token.key,
+        'user_id': user.id,
+        'username': user.username
+    })
+
+@api_view(['POST'])
+def logout(request):
+    """
+    User logout endpoint
+    """
+    try:
+        # Delete the user's token
+        request.user.auth_token.delete()
+        return Response(
+            {'message': 'Successfully logged out'},
+            status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )</code></pre>
+    
+    <h3>URL Configuration</h3>
+    <pre><code># urls.py
+from django.urls import path
+from .views import login, logout
+
+urlpatterns = [
+    path('api/login/', login, name='api-login'),
+    path('api/logout/', logout, name='api-logout'),
+]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-14">14. Custom Permissions</h2>
+    
+    <h3>Creating Custom Permission Classes</h3>
+    <pre><code># permissions.py
+from rest_framework import permissions
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission: Only owners can edit, others can only read
+    """
+    def has_object_permission(self, request, view, obj):
+        # Read permissions allowed for any request (GET, HEAD, OPTIONS)
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        # Write permissions only for the owner
+        return obj.owner == request.user
+
+class IsTeacherOrReadOnly(permissions.BasePermission):
+    """
+    Teachers can do anything, others can only read
+    """
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        # Check if user is a teacher
+        return request.user.is_authenticated and request.user.is_teacher</code></pre>
+    
+    <h3>Using Custom Permissions</h3>
+    <pre><code>from .permissions import IsOwnerOrReadOnly
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [IsOwnerOrReadOnly]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-15">15. Pagination</h2>
+    
+    <h3>Why Pagination?</h3>
+    <p>When you have thousands of records, returning all at once is inefficient. Pagination splits results into pages.</p>
+    
+    <h3>Built-in Pagination Styles</h3>
+    
+    <h4>1. PageNumberPagination</h4>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+# Access: /api/students/?page=2</code></pre>
+    
+    <h4>2. LimitOffsetPagination</h4>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
+
+# Access: /api/students/?limit=10&offset=20</code></pre>
+    
+    <h4>3. CursorPagination</h4>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
+    'PAGE_SIZE': 10
+}
+
+# Uses cursor parameter for efficient pagination</code></pre>
+    
+    <h3>Custom Pagination</h3>
+    <pre><code># pagination.py
+from rest_framework.pagination import PageNumberPagination
+
+class CustomPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'  # Allow client to set page size
+    max_page_size = 100  # Maximum limit
+
+# views.py
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    pagination_class = CustomPagination</code></pre>
+    
+    <h3>Pagination Response Format</h3>
+    <pre><code>{
+    "count": 100,
+    "next": "http://localhost:8000/api/students/?page=3",
+    "previous": "http://localhost:8000/api/students/?page=1",
+    "results": [
+        {
+            "id": 11,
+            "name": "Student 11",
+            "email": "student11@example.com"
+        },
+        // ... more students
+    ]
+}</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-16">16. Filtering and Search</h2>
+    
+    <h3>Basic Filtering in ViewSets</h3>
+    <pre><code>class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    def get_queryset(self):
+        """
+        Filter by query parameters
+        """
+        queryset = super().get_queryset()
+        
+        # Filter by name
+        name = self.request.query_params.get('name')
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        
+        # Filter by age
+        age = self.request.query_params.get('age')
+        if age:
+            queryset = queryset.filter(age=age)
+        
+        return queryset
+
+# Usage: /api/students/?name=john&age=20</code></pre>
+    
+    <h3>Using django-filter</h3>
+    
+    <h4>Installation</h4>
+    <pre><code>pip install django-filter</code></pre>
+    
+    <h4>Configuration</h4>
+    <pre><code># settings.py
+INSTALLED_APPS = [
+    # ...
+    'django_filters',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ]
+}</code></pre>
+    
+    <h4>Using Filters in Views</h4>
+    <pre><code>from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Simple filtering
+    filterset_fields = ['age', 'grade', 'is_active']
+    
+    # Search
+    search_fields = ['name', 'email']
+    
+    # Ordering
+    ordering_fields = ['name', 'age', 'created_at']
+    ordering = ['-created_at']  # Default ordering
+
+# Usage:
+# Filter: /api/students/?age=20&grade=A
+# Search: /api/students/?search=john
+# Order: /api/students/?ordering=-age</code></pre>
+    
+    <h3>Advanced Filtering with FilterSet</h3>
+    <pre><code># filters.py
+from django_filters import rest_framework as filters
+from .models import Student
+
+class StudentFilter(filters.FilterSet):
+    name = filters.CharFilter(lookup_expr='icontains')
+    min_age = filters.NumberFilter(field_name='age', lookup_expr='gte')
+    max_age = filters.NumberFilter(field_name='age', lookup_expr='lte')
+    
+    class Meta:
+        model = Student
+        fields = ['name', 'grade', 'is_active']
+
+# views.py
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filterset_class = StudentFilter
+
+# Usage: /api/students/?min_age=18&max_age=25&name=john</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-17">17. Best Practices</h2>
+    
+    <h3>1. API Versioning</h3>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}
+
+# urls.py
+urlpatterns = [
+    path('api/v1/', include('students.urls')),
+    path('api/v2/', include('students.v2_urls')),
+]</code></pre>
+    
+    <h3>2. Use Proper HTTP Methods</h3>
+    <ul>
+        <li>✅ <strong>GET:</strong> Retrieve data (idempotent, safe)</li>
+        <li>✅ <strong>POST:</strong> Create new resources</li>
+        <li>✅ <strong>PUT:</strong> Full update (replace entire resource)</li>
+        <li>✅ <strong>PATCH:</strong> Partial update (update specific fields)</li>
+        <li>✅ <strong>DELETE:</strong> Remove resources</li>
+    </ul>
+    
+    <h3>3. Return Appropriate Status Codes</h3>
+    <ul>
+        <li>200 OK - Successful GET, PUT, PATCH</li>
+        <li>201 Created - Successful POST</li>
+        <li>204 No Content - Successful DELETE</li>
+        <li>400 Bad Request - Invalid data</li>
+        <li>401 Unauthorized - Not authenticated</li>
+        <li>403 Forbidden - Not authorized</li>
+        <li>404 Not Found - Resource doesn't exist</li>
+        <li>500 Internal Server Error - Server error</li>
+    </ul>
+    
+    <h3>4. Validate Input Data</h3>
+    <pre><code>class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
+    
+    def validate_age(self, value):
+        if value < 18:
+            raise serializers.ValidationError("Age must be at least 18")
+        return value
+    
+    def validate(self, data):
+        # Cross-field validation
+        if data['start_date'] > data['end_date']:
+            raise serializers.ValidationError("End date must be after start date")
+        return data</code></pre>
+    
+    <h3>5. Use Throttling</h3>
+    <pre><code># settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
+}</code></pre>
+    
+    <h3>6. Documentation</h3>
+    <pre><code># Install
+pip install drf-yasg  # or drf-spectacular
+
+# urls.py
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Students API",
+        default_version='v1',
+        description="API for managing students",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+urlpatterns = [
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0)),
+]</code></pre>
+    
+    <h3>7. Error Handling</h3>
+    <pre><code># Custom exception handler
+from rest_framework.views import exception_handler
+from rest_framework.response import Response
+
+def custom_exception_handler(exc, context):
+    response = exception_handler(exc, context)
+    
+    if response is not None:
+        response.data['status_code'] = response.status_code
+        response.data['error'] = True
+    
+    return response
+
+# settings.py
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'myapp.utils.custom_exception_handler'
+}</code></pre>
+    
+    <h3>8. Use Read-Only Fields Appropriately</h3>
+    <pre><code>class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id', 'name', 'email', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']</code></pre>
+    
+    <h3>9. Optimize Queries</h3>
+    <pre><code>class StudentViewSet(viewsets.ModelViewSet):
+    # Use select_related for ForeignKey
+    queryset = Student.objects.select_related('school')
+    
+    # Use prefetch_related for ManyToMany
+    queryset = Student.objects.prefetch_related('courses')
+    
+    serializer_class = StudentSerializer</code></pre>
+    
+    <h3>10. Use HTTPS in Production</h3>
+    <pre><code># settings.py (for production)
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-18">18. Complete Example: Student Management API</h2>
+    
+    <h3>models.py</h3>
+    <pre><code>from django.db import models
+from django.contrib.auth.models import User
+
+class Student(models.Model):
+    GRADE_CHOICES = [
+        ('A', 'Grade A'),
+        ('B', 'Grade B'),
+        ('C', 'Grade C'),
+        ('D', 'Grade D'),
+        ('F', 'Grade F'),
+    ]
+    
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    age = models.IntegerField()
+    grade = models.CharField(max_length=1, choices=GRADE_CHOICES)
+    is_active = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='students')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['created_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.name} - {self.email}"</code></pre>
+    
+    <h3>serializers.py</h3>
+    <pre><code>from rest_framework import serializers
+from .models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    owner_name = serializers.CharField(source='owner.username', read_only=True)
+    
+    class Meta:
+        model = Student
+        fields = [
+            'id', 'name', 'email', 'age', 'grade', 
+            'is_active', 'owner', 'owner_name', 
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'owner', 'created_at', 'updated_at']
+    
+    def validate_age(self, value):
+        if value < 18 or value > 100:
+            raise serializers.ValidationError("Age must be between 18 and 100")
+        return value
+    
+    def validate_email(self, value):
+        if not value.endswith('@school.com'):
+            raise serializers.ValidationError("Email must be from school.com domain")
+        return value
+
+class StudentListSerializer(serializers.ModelSerializer):
+    """
+    Lighter serializer for list views
+    """
+    class Meta:
+        model = Student
+        fields = ['id', 'name', 'email', 'grade', 'is_active']</code></pre>
+    
+    <h3>permissions.py</h3>
+    <pre><code>from rest_framework import permissions
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission: Only owner can edit their students
+    """
+    def has_object_permission(self, request, view, obj):
+        # Read permissions for anyone
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        # Write permissions only for owner
+        return obj.owner == request.user</code></pre>
+    
+    <h3>views.py</h3>
+    <pre><code>from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from .models import Student
+from .serializers import StudentSerializer, StudentListSerializer
+from .permissions import IsOwnerOrReadOnly
+
+class StudentViewSet(viewsets.ModelViewSet):
+    """
+    A ViewSet for viewing and editing student instances.
+    
+    list: Return a list of all students
+    create: Create a new student
+    retrieve: Return a specific student
+    update: Update a student
+    partial_update: Partially update a student
+    destroy: Delete a student
+    """
+    queryset = Student.objects.select_related('owner').all()
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Filtering
+    filterset_fields = ['grade', 'is_active', 'age']
+    
+    # Search
+    search_fields = ['name', 'email']
+    
+    # Ordering
+    ordering_fields = ['name', 'age', 'created_at']
+    ordering = ['-created_at']
+    
+    def get_serializer_class(self):
+        """
+        Use lighter serializer for list view
+        """
+        if self.action == 'list':
+            return StudentListSerializer
+        return StudentSerializer
+    
+    def perform_create(self, serializer):
+        """
+        Set owner to current user when creating
+        """
+        serializer.save(owner=self.request.user)
+    
+    @action(detail=False, methods=['get'])
+    def active(self, request):
+        """
+        Custom endpoint: /api/students/active/
+        Returns only active students
+        """
+        active_students = self.queryset.filter(is_active=True)
+        serializer = self.get_serializer(active_students, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def deactivate(self, request, pk=None):
+        """
+        Custom endpoint: /api/students/{id}/deactivate/
+        Deactivate a student
+        """
+        student = self.get_object()
+        student.is_active = False
+        student.save()
+        serializer = self.get_serializer(student)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def statistics(self, request):
+        """
+        Custom endpoint: /api/students/statistics/
+        Returns student statistics
+        """
+        total = self.queryset.count()
+        active = self.queryset.filter(is_active=True).count()
+        inactive = total - active
+        
+        grade_distribution = {}
+        for choice in Student.GRADE_CHOICES:
+            grade = choice[0]
+            count = self.queryset.filter(grade=grade).count()
+            grade_distribution[grade] = count
+        
+        return Response({
+            'total_students': total,
+            'active_students': active,
+            'inactive_students': inactive,
+            'grade_distribution': grade_distribution
+        })</code></pre>
+    
+    <h3>urls.py</h3>
+    <pre><code>from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import StudentViewSet
+
+router = DefaultRouter()
+router.register(r'students', StudentViewSet, basename='student')
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+
+# This creates the following URLs:
+# GET    /api/students/              - List all students
+# POST   /api/students/              - Create new student
+# GET    /api/students/{id}/         - Retrieve student
+# PUT    /api/students/{id}/         - Update student
+# PATCH  /api/students/{id}/         - Partial update
+# DELETE /api/students/{id}/         - Delete student
+# GET    /api/students/active/       - List active students
+# POST   /api/students/{id}/deactivate/ - Deactivate student
+# GET    /api/students/statistics/   - Get statistics</code></pre>
+    
+    <h3>settings.py (DRF Configuration)</h3>
+    <pre><code># settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    
+    # Third-party
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_filters',
+    
+    # Local apps
+    'students',
+]
+
+REST_FRAMEWORK = {
+    # Authentication
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    
+    # Permissions
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    
+    # Pagination
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    
+    # Filtering
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    
+    # Throttling
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    },
+    
+    # Renderers
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+}</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-19">19. Testing Your API</h2>
+    
+    <h3>Using Django Test Case</h3>
+    <pre><code># tests.py
+from django.test import TestCase
+from django.contrib.auth.models import User
+from rest_framework.test import APIClient
+from rest_framework import status
+from .models import Student
+
+class StudentAPITestCase(TestCase):
+    def setUp(self):
+        """Set up test data"""
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass123'
+        )
+        self.client.force_authenticate(user=self.user)
+        
+        self.student = Student.objects.create(
+            name='John Doe',
+            email='john@school.com',
+            age=20,
+            grade='A',
+            owner=self.user
+        )
+    
+    def test_list_students(self):
+        """Test listing all students"""
+        response = self.client.get('/api/students/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+    
+    def test_create_student(self):
+        """Test creating a new student"""
+        data = {
+            'name': 'Jane Doe',
+            'email': 'jane@school.com',
+            'age': 22,
+            'grade': 'B'
+        }
+        response = self.client.post('/api/students/', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Student.objects.count(), 2)
+    
+    def test_retrieve_student(self):
+        """Test retrieving a specific student"""
+        response = self.client.get(f'/api/students/{self.student.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'John Doe')
+    
+    def test_update_student(self):
+        """Test updating a student"""
+        data = {'name': 'John Updated'}
+        response = self.client.patch(
+            f'/api/students/{self.student.id}/', 
+            data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.student.refresh_from_db()
+        self.assertEqual(self.student.name, 'John Updated')
+    
+    def test_delete_student(self):
+        """Test deleting a student"""
+        response = self.client.delete(f'/api/students/{self.student.id}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Student.objects.count(), 0)
+    
+    def test_authentication_required(self):
+        """Test that authentication is required"""
+        self.client.force_authenticate(user=None)
+        response = self.client.get('/api/students/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)</code></pre>
+    
+    <h3>Running Tests</h3>
+    <pre><code># Run all tests
+python manage.py test
+
+# Run specific test file
+python manage.py test students.tests
+
+# Run specific test class
+python manage.py test students.tests.StudentAPITestCase
+
+# Run specific test method
+python manage.py test students.tests.StudentAPITestCase.test_create_student
+
+# Run with verbosity
+python manage.py test --verbosity=2</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-20">20. API Documentation Tools</h2>
+    
+    <h3>1. drf-yasg (Swagger/OpenAPI)</h3>
+    <pre><code># Installation
+pip install drf-yasg
+
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    'drf_yasg',
+]
+
+# urls.py
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Students API",
+        default_version='v1',
+        description="Complete API for student management",
+        terms_of_service="https://www.example.com/terms/",
+        contact=openapi.Contact(email="contact@example.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+urlpatterns = [
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+]</code></pre>
+    
+    <h3>2. drf-spectacular (Modern Alternative)</h3>
+    <pre><code># Installation
+pip install drf-spectacular
+
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    'drf_spectacular',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Students API',
+    'DESCRIPTION': 'Complete API for student management',
+    'VERSION': '1.0.0',
+}
+
+# urls.py
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+urlpatterns = [
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-21">21. Common Patterns and Solutions</h2>
+    
+    <h3>Pattern 1: Nested Resources</h3>
+    <pre><code># For URLs like: /api/schools/1/students/
+from rest_framework import viewsets
+
+class SchoolStudentViewSet(viewsets.ModelViewSet):
+    serializer_class = StudentSerializer
+    
+    def get_queryset(self):
+        school_id = self.kwargs['school_pk']
+        return Student.objects.filter(school_id=school_id)
+    
+    def perform_create(self, serializer):
+        school_id = self.kwargs['school_pk']
+        serializer.save(school_id=school_id)
+
+# urls.py with nested routers
+from rest_framework_nested import routers
+
+router = routers.DefaultRouter()
+router.register(r'schools', SchoolViewSet)
+
+school_router = routers.NestedDefaultRouter(router, r'schools', lookup='school')
+school_router.register(r'students', SchoolStudentViewSet, basename='school-students')</code></pre>
+    
+    <h3>Pattern 2: Bulk Operations</h3>
+    <pre><code>from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+
+class StudentViewSet(viewsets.ModelViewSet):
+    # ... other code ...
+    
+    @action(detail=False, methods=['post'])
+    def bulk_create(self, request):
+        """
+        Create multiple students at once
+        POST /api/students/bulk_create/
+        Body: [{"name": "...", "email": "..."}, {...}]
+        """
+        serializer = self.get_serializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['patch'])
+    def bulk_update(self, request):
+        """
+        Update multiple students at once
+        PATCH /api/students/bulk_update/
+        Body: [{"id": 1, "name": "..."}, {"id": 2, "grade": "A"}]
+        """
+        updated_students = []
+        errors = []
+        
+        for item in request.data:
+            try:
+                student_id = item.pop('id')
+                student = Student.objects.get(id=student_id)
+                serializer = self.get_serializer(student, data=item, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    updated_students.append(serializer.data)
+                else:
+                    errors.append({'id': student_id, 'errors': serializer.errors})
+            except Student.DoesNotExist:
+                errors.append({'id': student_id, 'error': 'Not found'})
+        
+        return Response({
+            'updated': updated_students,
+            'errors': errors
+        })</code></pre>
+    
+    <h3>Pattern 3: File Uploads</h3>
+    <pre><code># models.py
+class Student(models.Model):
+    # ... other fields ...
+    profile_picture = models.ImageField(upload_to='students/profiles/', null=True, blank=True)
+    document = models.FileField(upload_to='students/documents/', null=True, blank=True)
+
+# serializers.py
+class StudentSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False)
+    document = serializers.FileField(required=False)
+    
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+# views.py
+from rest_framework.parsers import MultiPartParser, FormParser
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    parser_classes = [MultiPartParser, FormParser]
+    
+    @action(detail=True, methods=['post'])
+    def upload_picture(self, request, pk=None):
+        """
+        Upload profile picture
+        POST /api/students/{id}/upload_picture/
+        """
+        student = self.get_object()
+        file = request.FILES.get('profile_picture')
+        
+        if not file:
+            return Response(
+                {'error': 'No file provided'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        student.profile_picture = file
+        student.save()
+        
+        serializer = self.get_serializer(student)
+        return Response(serializer.data)</code></pre>
+    
+    <h3>Pattern 4: Conditional Responses</h3>
+    <pre><code>class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    def get_serializer_class(self):
+        """
+        Different serializers for different actions
+        """
+        if self.action == 'list':
+            return StudentListSerializer
+        elif self.action == 'create':
+            return StudentCreateSerializer
+        return StudentDetailSerializer
+    
+    def get_queryset(self):
+        """
+        Different querysets based on user role
+        """
+        user = self.request.user
+        if user.is_staff:
+            return Student.objects.all()
+        return Student.objects.filter(owner=user)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section-22">22. Summary: Quick Reference</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Key Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>REST API</strong></td>
+                <td>Uses HTTP methods (GET, POST, PUT, PATCH, DELETE) for CRUD operations</td>
+            </tr>
+            <tr>
+                <td><strong>Serializers</strong></td>
+                <td>Convert Django models ↔ JSON, handle validation</td>
+            </tr>
+            <tr>
+                <td><strong>Status Codes</strong></td>
+                <td>2xx = success, 4xx = client error, 5xx = server error</td>
+            </tr>
+            <tr>
+                <td><strong>@api_view</strong></td>
+                <td>Required for function-based views in DRF</td>
+            </tr>
+            <tr>
+                <td><strong>APIView</strong></td>
+                <td>Class-based view with methods (get, post, put, patch, delete)</td>
+            </tr>
+            <tr>
+                <td><strong>Generic Views</strong></td>
+                <td>Pre-built views (ListCreateAPIView, RetrieveUpdateDestroyAPIView, etc.)</td>
+            </tr>
+            <tr>
+                <td><strong>ViewSets</strong></td>
+                <td>Combine all CRUD in one class, use with routers</td>
+            </tr>
+            <tr>
+                <td><strong>Routers</strong></td>
+                <td>Auto-generate URLs for ViewSets</td>
+            </tr>
+            <tr>
+                <td><strong>Authentication</strong></td>
+                <td>SessionAuthentication, TokenAuthentication, JWT</td>
+            </tr>
+            <tr>
+                <td><strong>Permissions</strong></td>
+                <td>IsAuthenticated, IsAdminUser, AllowAny, custom permissions</td>
+            </tr>
+            <tr>
+                <td><strong>Pagination</strong></td>
+                <td>PageNumberPagination, LimitOffsetPagination, CursorPagination</td>
+            </tr>
+            <tr>
+                <td><strong>Filtering</strong></td>
+                <td>DjangoFilterBackend, SearchFilter, OrderingFilter</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="tip" style="margin-top: 30pt; padding: 20pt; text-align: center;">
+        <h2 style="margin: 0; color: #17a2b8;">You're Now a DRF Expert! 🎉</h2>
+        <p style="margin-top: 10pt; font-size: 11pt;">Build powerful, scalable REST APIs with Django REST Framework</p>
+    </div>
+    
+    <div style="margin-top: 40pt; padding-top: 20pt; border-top: 2px solid #0c4b33; text-align: center; color: #666; font-size: 9pt;">
+        <p><strong>Django REST Framework API Guide - Complete Edition</strong></p>
+        <p>Comprehensive Reference for Building REST APIs</p>
+        <p>Covers: Serializers, Views, Authentication, Permissions, and Best Practices</p>
+        <p style="margin-top: 10pt;">For latest updates, visit: <a href="https://www.django-rest-framework.org/" target="_blank">django-rest-framework.org</a></p>
+    </div>
+    
+</body>
+</html>>ListAPIView</code></td>
+                <td>Read-only list of objects</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td><code>CreateAPIView</code></td>
+                <td>Create-only</td>
+                <td>POST</td>
+            </tr>
+            <tr>
+                <td><code>RetrieveAPIView</code></td>
+                <td>Read-only single object</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td><code

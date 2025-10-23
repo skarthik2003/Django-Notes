@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Learning Guide - Complete Edition</title>
+    <style>
+        @page {
+            margin: 1in;
+        }
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        h1 {
+            color: #0c4b33;
+            font-size: 28pt;
+            margin-top: 0;
+            margin-bottom: 24pt;
+            border-bottom: 3px solid #0c4b33;
+            padding-bottom: 12pt;
+        }
+        h2 {
+            color: #0c4b33;
+            font-size: 18pt;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+        }
+        h3 {
+            color: #1a5c42;
+            font-size: 14pt;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+        h4 {
+            color: #2d6a4f;
+            font-size: 12pt;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            font-style: italic;
+        }
+        p {
+            margin: 8pt 0;
+            text-align: justify;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 10pt;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-left: 4px solid #0c4b33;
+            padding: 12pt;
+            margin: 12pt 0;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+        ul, ol {
+            margin: 8pt 0;
+            padding-left: 30pt;
+        }
+        li {
+            margin: 4pt 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8pt;
+            text-align: left;
+        }
+        th {
+            background-color: #0c4b33;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .important {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .tip {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        .good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .bad {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        a {
+            color: #0c4b33;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .section-break {
+            border-top: 2px solid #ddd;
+            margin: 24pt 0;
+        }
+        .toc {
+            background-color: #f5f5f5;
+            padding: 20pt;
+            margin: 20pt 0;
+            border-radius: 8px;
+        }
+        .toc h2 {
+            margin-top: 0;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 8pt 0;
+            padding-left: 20pt;
+            text-indent: -20pt;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            pre, .note, .important, .tip, table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Django Learning Guide - Complete Edition</h1>
+    
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li>1. <a href="#section1">Django ORM (Object-Relational Mapper)</a></li>
+            <li>2. <a href="#section2">Django Models</a></li>
+            <li>3. <a href="#section3">Migrations</a></li>
+            <li>4. <a href="#section4">Verbose Field Names</a></li>
+            <li>5. <a href="#section5">Admin Panel</a></li>
+            <li>6. <a href="#section6">URL Configuration</a></li>
+            <li>7. <a href="#section7">Views</a></li>
+            <li>8. <a href="#section8">Templates</a></li>
+            <li>9. <a href="#section9">Django Installation &amp; Setup</a></li>
+            <li>10. <a href="#section10">Project Structure Explained</a></li>
+            <li>11. <a href="#section11">Django Queries</a></li>
+            <li>12. <a href="#section12">Basic Queries &amp; Lookups</a></li>
+            <li>13. <a href="#section13">Advanced Queries</a></li>
+            <li>14. <a href="#section14">Complex Queries with Q Objects</a></li>
+            <li>15. <a href="#section15">QuerySet Caching &amp; Managers</a></li>
+            <li>16. <a href="#section16">Forward and Backward Relations</a></li>
+            <li>17. <a href="#section17">QuerySet Lazy Evaluation</a></li>
+            <li>18. <a href="#section18">Update and Delete</a></li>
+            <li>19. <a href="#section19">Object Comparison</a></li>
+            <li>20. <a href="#section20">Copying Objects</a></li>
+            <li>21. <a href="#section21">Aggregation</a></li>
+            <li>22. <a href="#section22">F Expressions</a></li>
+            <li>23. <a href="#section23">Query Optimization</a></li>
+            <li>24. <a href="#section24">Django App Registry &amp; Reverse Relations</a></li>
+            <li>25. <a href="#section25">DateTimeField Options</a></li>
+            <li>26. <a href="#section26">Choices in Django Models</a></li>
+            <li>27. <a href="#section27">Django Serialization</a></li>
+            <li>28. <a href="#section28">Natural Keys in Django</a></li>
+            <li>29. <a href="#section29">Summary: Key Concepts</a></li>
+        </ul>
+    </div>
+    
+    <div style="page-break-after: always;"></div>
+    
+    <h2 id="section1">1. Django ORM (Object-Relational Mapper)</h2>
+    
+    <h3>What is ORM?</h3>
+    <p>ORM is a tool that lets you interact with databases using Python objects instead of SQL queries.</p>
+    
+    <p><strong>Example:</strong> Instead of writing SQL like:</p>
+    <pre><code>SELECT * FROM book WHERE name="karthik"</code></pre>
+    
+    <p>You write Django code:</p>
+    <pre><code>Book.objects.filter(name="karthik")</code></pre>
+    
+    <div class="note">
+        <strong>Key Point:</strong> You can use Django without manually writing SQL because the ORM handles all database interactions for you.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section2">2. Django Models</h2>
+    
+    <h3>What is a Model?</h3>
+    <ul>
+        <li>A Python class that defines how Django structures and manages your data</li>
+        <li>Each model typically maps to one database table</li>
+        <li>Each attribute in the model = a column in the table</li>
+        <li>Each instance (object) = a row in the table</li>
+        <li>Django automatically creates a database-access API</li>
+    </ul>
+    
+    <h3>Model Syntax</h3>
+    <pre><code>from django.db import models
+
+class Reporter(models.Model):
+    full_name = models.CharField(max_length=70)
+    
+    def __str__(self):
+        return self.full_name
+
+class Article(models.Model):
+    pub_date = models.DateField()
+    headline = models.CharField(max_length=200)
+    content = models.TextField()
+    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.headline</code></pre>
+    
+    <h3>After Defining Models</h3>
+    <ol>
+        <li>Add your app to <code>INSTALLED_APPS</code> in <code>settings.py</code></li>
+        <li>Run migrations to create database tables</li>
+    </ol>
+    
+    <p><strong>Documentation:</strong> <a href="https://docs.djangoproject.com/en/3.0/topics/db/models" target="_blank">Django Models Documentation</a></p>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section3">3. Migrations</h2>
+    
+    <p><strong>Two key commands:</strong></p>
+    <pre><code>python manage.py makemigrations  # Creates migration files
+python manage.py migrate         # Applies migrations to database</code></pre>
+    
+    <ul>
+        <li><code>makemigrations</code>: Looks at your models and creates migration files for new/changed tables</li>
+        <li><code>migrate</code>: Executes migrations and creates/updates tables in your database</li>
+    </ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section4">4. Verbose Field Names</h2>
+    
+    <p>Used for better readability in admin panel and forms.</p>
+    
+    <pre><code># Django auto-generates from field name (converts underscores to spaces)a
+first_name = models.CharField(max_length=30)  # Verbose name: "first name"
+
+# Explicitly set verbose name
+first_name = models.CharField("person's first name", max_length=30)
+
+# For ForeignKey, ManyToMany, OneToOne - use verbose_name parameter
+poll = models.ForeignKey(
+    Poll,
+    on_delete=models.CASCADE,
+    verbose_name="the related poll"
+)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section5">5. Admin Panel</h2>
+    
+    <p>To display your models in Django admin:</p>
+    
+    <pre><code># admin.py
+from django.contrib import admin
+from .models import Article
+
+admin.site.register(Article)</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section6">6. URL Configuration</h2>
+    
+    <pre><code># urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("articles/&lt;int:year&gt;/", views.year_archive),
+    path("articles/&lt;int:year&gt;/&lt;int:month&gt;/", views.month_archive),
+    path("articles/&lt;int:year&gt;/&lt;int:month&gt;/&lt;int:pk&gt;/", views.article_detail),
+]</code></pre>
+    
+    <h3>How it works:</h3>
+    <ul>
+        <li>Django checks each path in order</li>
+        <li>Stops at the first match</li>
+        <li>Calls the corresponding view function</li>
+        <li>If none of them matches, Django calls a special-case 404 view.</li>
+        <li><strong>Example:</strong> <code>/articles/2005/05/39323/</code> calls <code>article_detail(request, year=2005, month=5, pk=39323)</code></li>
+    </ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section7">7. Views</h2>
+    
+    <h3>View Responsibilities</h3>
+    <ul>
+        <li>Return an <code>HttpResponse</code> object, OR</li>
+        <li>Raise an exception (like <code>Http404</code>)</li>
+        <li>Can retrieve data, load templates, render responses</li>
+    </ul>
+    
+    <h3>Basic View Example</h3>
+    <pre><code>from django.shortcuts import render
+from .models import Article
+
+def year_archive(request, year):
+    a_list = Article.objects.filter(pub_date__year=year)
+    context = {"year": year, "article_list": a_list}
+    return render(request, "news/year_archive.html", context)</code></pre>
+    
+    <h3>View with Variable Response</h3>
+    <pre><code>from django.http import HttpResponse
+
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ", ".join([q.question_text for q in latest_question_list])
+    return HttpResponse("Latest questions are: %s" % output)</code></pre>
+    
+    <h3>View with 404 Handling</h3>
+    
+    <h4>Method 1: Manual try-except</h4>
+    <pre><code>from django.shortcuts import render
+from django.http import Http404
+
+def detail(request, question_id):
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, "polls/detail.html", {"question": question})</code></pre>
+    
+    <h4>Method 2: Using shortcut (recommended)</h4>
+    <pre><code>from django.shortcuts import render, get_object_or_404
+
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, "polls/detail.html", {"question": question})</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section8">8. Templates</h2>
+    
+    <p>Templates define HTML structure and display data.</p>
+    
+    <h3>Template Features</h3>
+    
+    <p><strong>Variables:</strong></p>
+    <pre><code>{{ article.headline }}</code></pre>
+    
+    <p><strong>Filters:</strong></p>
+    <pre><code>{{ article.pub_date|date:"F j, Y" }}</code></pre>
+    
+    <p><strong>Template Inheritance:</strong></p>
+    <pre><code>{% extends "base.html" %}</code></pre>
+    
+    <h3>Base Template Example</h3>
+    <pre><code>&lt;!-- base.html --&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;{% block title %}{% endblock %}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;img src="{% static 'images/sitelogo.png' %}" alt="Logo"&gt;
+    {% block content %}{% endblock %}
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    
+    <h3>URL Namespacing in Templates</h3>
+    
+    <p>To use <code>{% url %}</code> tag correctly, add namespace in <code>urls.py</code>:</p>
+    
+    <pre><code># polls/urls.py
+app_name = 'polls'  # Application namespace
+urlpatterns = [...]</code></pre>
+    
+    <p>Then in templates:</p>
+    <pre><code>&lt;a href="{% url 'polls:detail' question.id %}"&gt;</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section9">9. Django Installation & Setup</h2>
+    
+    <pre><code># System setup
+sudo apt update
+sudo apt install pip python3 python-is-python3 python3-venv
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate
+
+# Install Django
+python -m pip install Django
+
+# Start project
+django-admin startproject mysite
+cd mysite
+python manage.py runserver
+
+# Create app
+python manage.py startapp polls
+
+# Migrations
+python manage.py makemigrations polls
+python manage.py migrate
+
+# Create admin user
+python manage.py createsuperuser</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section10">10. Project Structure Explained</h2>
+    
+    <h3>manage.py</h3>
+    <p>Command-line utility for your project (like a remote control).</p>
+    
+    <pre><code>python manage.py runserver       # Start development server
+python manage.py startapp blog   # Create new app
+python manage.py makemigrations  # Create migrations
+python manage.py migrate         # Apply migrations
+python manage.py createsuperuser # Create admin user</code></pre>
+    
+    <h3>__init__.py</h3>
+    <ul>
+        <li>Empty file that marks the directory as a Python package</li>
+        <li>Required for importing modules</li>
+    </ul>
+    
+    <h3>settings.py</h3>
+    <p>Configuration file controlling Django behavior.</p>
+    
+    <p><strong>Key sections:</strong></p>
+    <ul>
+        <li><code>INSTALLED_APPS</code> - List of apps in your project</li>
+        <li><code>MIDDLEWARE</code> - Request/response processing components</li>
+        <li><code>DATABASES</code> - Database configuration (SQLite by default)</li>
+        <li><code>TEMPLATES</code> - Template directory settings</li>
+        <li><code>STATIC_URL</code> - Static files (CSS, JS, images) path</li>
+    </ul>
+    
+    <h3>urls.py</h3>
+    <p>URL dispatcher - maps URLs to views.</p>
+    
+    <pre><code>from django.urls import path
+from django.contrib import admin
+from . import views
+
+urlpatterns = [
+    path("admin/", admin.site.urls),   # Django admin panel
+    path("blog/", views.blog_home),    # Custom blog page
+]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section11">11. Django Queries</h2>
+    
+    <p><strong>Documentation:</strong> <a href="https://docs.djangoproject.com/en/5.2/topics/db/queries/" target="_blank">Django Queries Documentation</a></p>
+    
+    <h3>Model Example</h3>
+    <pre><code>import datetime
+from django.db import models
+from django.utils import timezone
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField("date published")
+    
+    def __str__(self):
+        return self.question_text
+    
+    def was_published_recently(self):
+        return self.pub_date &gt;= timezone.now() - datetime.timedelta(days=1)
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.choice_text</code></pre>
+    
+    <h3>Basic Query Examples</h3>
+    <pre><code>from django.utils import timezone
+from polls.models import Question, Choice
+
+# Get all objects
+Question.objects.all()  # &lt;QuerySet []&gt;
+
+# Create and save
+q = Question(question_text="What's new?", pub_date=timezone.now())
+q.save()
+
+# Access fields
+q.id  # 1
+q.question_text  # "What's new?"
+q.pub_date  # datetime with tzinfo
+
+# Update
+q.question_text = "What's up?"
+q.save()
+
+# Filter
+Question.objects.filter(id=1)
+Question.objects.filter(question_text__startswith="What")
+
+# Get single object
+Question.objects.get(pk=1)
+current_year = timezone.now().year
+Question.objects.get(pub_date__year=current_year)
+
+# Call custom methods
+q = Question.objects.get(pk=1)
+q.was_published_recently()  # True
+
+# Reverse relationships (choice_set)
+q.choice_set.all()  # &lt;QuerySet []&gt;
+
+# Create related objects
+q.choice_set.create(choice_text="Not much", votes=0)
+q.choice_set.create(choice_text="The sky", votes=0)
+c = q.choice_set.create(choice_text="Just hacking again", votes=0)
+
+# Access from child to parent
+c.question  # &lt;Question: What's up?&gt;
+
+# Count related objects
+q.choice_set.count()  # 3
+
+# Filter across relationships
+Choice.objects.filter(question__pub_date__year=current_year)
+
+# Delete
+q.choice_set.filter(choice_text__startswith="Just hacking").delete()</code></pre>
+    
+    <div class="note">
+        <strong>Note:</strong> If you use <code>related_name</code> in ForeignKey, <code>_set</code> won't work. Use your custom related name instead.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section12">12. Basic Queries & Lookups</h2>
+    
+    <h3>Retrieving Objects</h3>
+    
+    <pre><code># Exact match (explicit and implicit)
+Reporter.objects.get(id__exact=1)
+Reporter.objects.get(id=1)  # __exact is implied
+
+# Case-insensitive exact match
+Blog.objects.get(name__iexact="beatles blog")  # Matches any case
+
+# Contains
+Entry.objects.get(headline__contains='Lennon')  # LIKE '%Lennon%'
+Entry.objects.get(headline__icontains='lennon')  # Case-insensitive
+
+# Starts with
+Entry.objects.filter(headline__startswith='Lennon')  # LIKE 'Lennon%'
+Entry.objects.filter(headline__istartswith='lennon')  # Case-insensitive
+# Also available: endswith, iendswith
+
+# Range
+Entry.objects.filter(pub_date__range=("2016-01-01", "2025-09-30"))
+
+# Comparison operators
+Entry.objects.filter(pub_date__year__gte=2005)  # Greater than or equal
+Entry.objects.filter(pub_date__lte='2006-01-01')  # Less than or equal
+# Also available: lt, gt, gte, lte
+
+# IN lookup
+Entry.objects.filter(pub_date__year__in=[2025, 2015])</code></pre>
+    
+    <h3>Relationships</h3>
+    <pre><code># Reporter has many Articles
+a = Article(pub_date=date.today(), headline="Django is cool", 
+            content="Yeah.", reporter=r)
+a.save()
+
+# Forward relationship (Article -&gt; Reporter)
+r = a.reporter
+r.full_name  # 'John Smith'
+
+# Reverse relationship (Reporter -&gt; Articles)
+r.article_set.all()  # All articles by this reporter</code></pre>
+    
+    <div class="important">
+        <strong>Important:</strong> Use <code>related_name</code> to customize reverse relationship name:
+        <pre><code>class Article(models.Model):
+    reporter = models.ForeignKey(Reporter, related_name='articles')
+
+# Now use:
+r.articles.all()  # instead of r.article_set.all()</code></pre>
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section13">13. Advanced Queries</h2>
+    
+    <h3>Chaining Filters</h3>
+    <pre><code>Entry.objects.filter(
+    headline__startswith='What'
+).exclude(
+    pub_date__gte=datetime.date.today()
+).filter(
+    pub_date__gte=datetime.date(2005, 1, 30)
+)</code></pre>
+    
+    <h3>Ordering</h3>
+    <pre><code># Order by blog name, then headline descending
+Entry.objects.order_by('blog__name', '-headline')
+# Minus sign (-) = descending order</code></pre>
+    
+    <h3>Efficient Foreign Key Access</h3>
+    <pre><code># <span class="good">Good:</span> Only fetch foreign key ID
+entry.blog_id
+
+# <span class="bad">Bad:</span> Fetches entire Blog object
+entry.blog.id</code></pre>
+    
+    <h3>Values and Values List</h3>
+    <pre><code># Get dictionaries with all fields
+Entry.objects.all().values()
+# Returns: [{'id': 1, 'blog_id': 3, 'headline': '...'}, ...]
+
+# Get specific fields as dictionaries
+Blog.objects.values('id', 'name')
+# Returns: [{'id': 1, 'name': 'Karthik Blog'}, ...]
+
+# Get tuples
+Blog.objects.values_list('name')
+# Returns: [('Karthik Blog',), ('Beatles Blog',)]
+
+# Get flat list (single field only)
+Blog.objects.values_list('name', flat=True)
+# Returns: ['Karthik Blog', 'Beatles Blog']
+
+# With expressions
+from django.db.models.functions import Lower
+Entry.objects.values_list('id', Lower('headline'))
+# Returns: [(1, 'first entry'), ...]</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section14">14. Complex Queries with Q Objects</h2>
+    
+    <pre><code>from django.db.models import Q
+
+# OR condition
+Entry.objects.filter(Q(pub_date__year=2015) | Q(pub_date__year=2025))
+
+# Same as above using __in
+Entry.objects.filter(pub_date__year__in=[2025, 2015])
+
+# AND condition (use &amp;)
+Entry.objects.filter(Q(headline__contains="Django") &amp; Q(pub_date__year=2025))
+
+# NOT condition (use ~)
+Entry.objects.filter(~Q(headline__contains="Django"))
+
+# Complex combinations
+Entry.objects.filter(
+    Q(headline__startswith="Hi") | (Q(pub_date__year=2025) &amp; ~Q(rating__lt=5))
+)</code></pre>
+    
+    <div class="important">
+        <strong>Important:</strong> In <code>.filter()</code> or <code>.get()</code>, all Q objects must come before keyword arguments.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section15">15. QuerySet Caching & Managers</h2>
+    
+    <h3>QuerySet Caching</h3>
+    <pre><code># First access hits database
+e = Entry.objects.get(id=2)
+print(e.blog)  # Database query
+
+# Second access uses cache
+print(e.blog)  # No database query - cached!</code></pre>
+    
+    <h3>Managers</h3>
+    <p>To retrieve objects from your database, you construct a QuerySet via a Manager on your model class. Each model has its own manager called <code>objects</code>.</p>
+    
+    <pre><code># Default manager
+Question.objects.all()
+
+# Custom manager (if defined)
+Question.published.all()</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section16">16. Forward and Backward Relations</h2>
+    
+    <pre><code># Forward (from child to parent)
+e = Entry.objects.get(pk=1)
+e.blog  # Returns associated Blog object
+
+# Backward (from parent to children)
+b = Blog.objects.get(pk=1)
+b.entry_set.all()  # All entries for this blog
+
+# With related_name='entries':
+b.entries.all()
+
+# Filter parent by child attributes
+Blog.objects.filter(entry__headline__contains='story')</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section17">17. QuerySet Lazy Evaluation</h2>
+    
+    <p>QuerySets are lazy - no database query until you evaluate them.</p>
+    
+    <pre><code># These don't hit the database yet
+q = Entry.objects.filter(headline__startswith="What")
+q = q.filter(pub_date__lte=datetime.date.today())
+q = q.exclude(body_text__icontains="food")
+
+# Database query happens here
+print(q)</code></pre>
+    
+    <h3>When QuerySets are evaluated:</h3>
+    <ul>
+        <li><strong>Iteration:</strong> <code>for entry in Entry.objects.all()</code></li>
+        <li><strong>Slicing:</strong> <code>Entry.objects.all()[0:5]</code></li>
+        <li><strong>len():</strong> <code>len(Entry.objects.all())</code></li>
+        <li><strong>list():</strong> <code>list(Entry.objects.all())</code></li>
+        <li><strong>bool():</strong> <code>if Entry.objects.filter(...):</code></li>
+        <li><strong>repr():</strong> <code>print(Entry.objects.all())</code></li>
+    </ul>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section18">18. Update and Delete</h2>
+    
+    <pre><code># Delete single object
+Entry.objects.get(pk=1).delete()
+
+# Delete multiple objects
+Entry.objects.filter(pub_date__year=2005).delete()
+
+# Update multiple objects note update for .get won't work
+Entry.objects.filter(pub_date__year=2007).update(headline='Everything is the same')</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section19">19. Object Comparison</h2>
+    
+    <pre><code>e1 = Entry.objects.get(pk=1)
+e2 = Entry.objects.get(pk=2)
+e1 == e2  # Django compares primary keys automatically</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section20">20. Copying Objects</h2>
+    
+    <pre><code># Copy an object
+blog = Blog(name='My blog', tagline='Blogging is easy')
+blog.save()  # blog.pk == 1
+
+# Create a copy
+blog.pk = None
+blog.save()  # blog.pk == 2 (new object)
+
+# For objects with ManyToMany fields
+entry = Entry.objects.all()[0]
+old_authors = entry.authors.all()  # Save M2M relationships
+entry.pk = None
+entry.save()  # Creates new object
+entry.authors.set(old_authors)  # Restore M2M relationships</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id="section21">21. Aggregation</h2>
+    
+    <h3>aggregate() - Single summary for entire QuerySet</h3>
+    
+    <pre><code>from django.db.models import Avg, Max, Min, Count
+
+# Average price of all books
+Book.objects.all().aggregate(Avg('price'))
+# Returns: {'price__avg': Decimal('1045.39')}
+
+# Maximum price
+Book.objects.all().aggregate(Max('price'))
+# Returns: {'price__max': Decimal('1997.29')}
+
+# Custom name for result
+Book.objects.all().aggregate(price_diff=Max('price') - Avg('price'))
+# Returns: {'price_diff': Decimal('951.89')}
+
+# Multiple aggregates
+Store.objects.filter(name="Rogers").aggregate(
+    min_price=Min('books__price'),
+    max_price=Max('books__price')
+)
+# Returns: {'min_price': Decimal('10.00'), 'max_price': Decimal('100.00')}</code></pre>
+    
+    <h3>annotate() - Summary per object in QuerySet</h3>
+    
+    <pre><code># Count authors per book
+q = Book.objects.annotate(Count('authors'))
+q[0]  # &lt;Book: The Definitive Guide to Django&gt;
+q[0].authors__count  # 2
+
+# Min and max price per store
+s = Store.objects.annotate(
+    min_price=Min('books__price'),
+    max_price=Max('books__price')
+)
+s[0].min_price  # Decimal('111.63')
+s[0].max_price  # Decimal('500.00')</code></pre>
+    
+    <div class="tip">
+        <strong>Key Difference:</strong>
+        <ul>
+            <li><code>aggregate()</code> → One result for whole QuerySet</li>
+            <li><code>annotate()</code> → One result per object</li>
+        </ul>
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section22'>22. F Expressions</h2>
+    
+    <p>Compare field values or perform field-based operations.</p>
+    
+    <pre><code>from django.db.models import F
+from datetime import timedelta
+
+# Compare two fields
+Reporter.objects.filter(salary__gte=F('hike') * 2)
+Reporter.objects.filter(hike__gte=0.5 * F('salary'))
+
+# Date arithmetic
+Entry.objects.filter(mod_date__gt=F('pub_date') + timedelta(days=3))
+# For months and years use relativedelta: from dateutil.relativedelta import relativedelta Entry.objects.filter(mod_date__gt=F('pub_date') + relativedelta(years=1)) 
+
+# Use in annotations
+Company.objects.annotate(chairs_needed=F('num_employees') - F('num_chairs'))</code></pre>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section23'>23. Query Optimization</h2>
+    
+    <h3>4 Phases of Query Evaluation</h3>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Description</th>
+                <th>Depends On</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>T1</td>
+                <td>Django sends SQL to database</td>
+                <td>Network latency, DB location</td>
+            </tr>
+            <tr>
+                <td>T2</td>
+                <td>Database executes query</td>
+                <td>Query complexity, indexes, DB load</td>
+            </tr>
+            <tr>
+                <td>T3</td>
+                <td>Database returns data</td>
+                <td>Network speed, data size</td>
+            </tr>
+            <tr>
+                <td>T4</td>
+                <td>Django converts to Model instances</td>
+                <td>ORM overhead, record count</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Optimization Tips</h3>
+    
+    <h4>❌ Avoid queries in loops (N+1 Problem)</h4>
+    <pre><code># <span class="bad">Bad:</span> N+1 queries problem
+for book in Book.objects.all():
+    print(book.author.name)  # Query for each book!
+
+# <span class="good">Good:</span> Single query with JOIN
+for book in Book.objects.select_related('author'):
+    print(book.author.name)  # Only 1 query</code></pre>
+    
+    <h4>✅ Use select_related() for ForeignKey/OneToOne</h4>
+    <pre><code># Single query with JOIN
+books = Book.objects.select_related('author')</code></pre>
+    
+    <h4>✅ Use prefetch_related() for ManyToMany/Reverse ForeignKey</h4>
+    <pre><code># Two queries (one for books, one for authors)
+books = Book.objects.prefetch_related('authors')</code></pre>
+    
+    <h4>✅ Fetch only necessary fields</h4>
+    <pre><code># Only get specific fields
+Book.objects.values('id', 'title')
+Book.objects.only('title', 'price')</code></pre>
+    
+    <h4>✅ Use foreign key ID directly</h4>
+    <pre><code># <span class="good">Good:</span> No extra query
+entry.blog_id
+
+# <span class="bad">Bad:</span> Fetches entire Blog object
+entry.blog.id</code></pre>
+    
+    <h4>✅ Don't order if you don't need to</h4>
+    <pre><code>Entry.objects.all().order_by()  # Clear default ordering</code></pre>
+    
+    <h4>✅ Use bulk methods</h4>
+    <pre><code># <span class="bad">Bad:</span> 100 database queries
+for i in range(100):
+    Entry.objects.create(headline=f'Entry {i}')
+
+# <span class="good">Good:</span> Single database query
+Entry.objects.bulk_create([
+    Entry(headline=f'Entry {i}') for i in range(100)
+])</code></pre>
+    
+    <p><strong>Also available:</strong> <code>bulk_update()</code> for updating multiple objects at once</p>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section24'>24. Django App Registry & Reverse Relations</h2>
+    
+    <h3>How does Django create reverse relations like blog.entry_set?</h3>
+    
+    <p>When Django starts:</p>
+    <ol>
+        <li>Imports models from all apps in <code>INSTALLED_APPS</code></li>
+        <li>When it sees <code>ForeignKey(Blog)</code> in Entry model:
+            <ul>
+                <li>Creates forward relation (<code>Entry.blog</code>)</li>
+                <li>Notes that Blog needs a reverse accessor</li>
+                <li>Dynamically creates <code>Blog.entry_set</code> (unless you specify <code>related_name</code>)</li>
+            </ul>
+        </li>
+        <li>If Blog isn't loaded yet, Django keeps a "pending lookup" and resolves it later</li>
+        <li><strong>Order of model definitions doesn't matter</strong> because of this system</li>
+    </ol>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section25'>25. DateTimeField Options: default vs auto_now_add</h2>
+    
+    <p>When working with timestamp fields, you have two main options:</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Behavior</th>
+                <th>When to Use</th>
+                <th>Editable in Admin?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>default=timezone.now</code></td>
+                <td>Sets the field's value to the current timestamp when the object is created, <em>unless</em> you explicitly pass another value</td>
+                <td>Use when you might want to <strong>manually set</strong> or <strong>update</strong> the timestamp</td>
+                <td>✅ Yes</td>
+            </tr>
+            <tr>
+                <td><code>auto_now_add=True</code></td>
+                <td>Automatically sets the field to the current timestamp once, when the object is first created. You <strong>cannot manually override</strong> it</td>
+                <td>Use for true "created at" timestamps that should <strong>never change</strong></td>
+                <td>❌ No (not editable)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>Example Usage</h3>
+    <pre><code>from django.utils import timezone
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    
+    # Option 1: Can be manually set/overridden
+    posted_at = models.DateTimeField(default=timezone.now)
+    
+    # Option 2: Fixed at creation time (recommended for "created_at")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Bonus: Auto-update on every save
+    updated_at = models.DateTimeField(auto_now=True)</code></pre>
+    
+    <div class="tip">
+        <strong>Pro Tip:</strong> Use <code>auto_now_add=True</code> for "created_at" fields and <code>auto_now=True</code> for "updated_at" fields.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section26'>26. Choices in Django Models</h2>
+    
+    <h3>What are Choices?</h3>
+    <p>The <code>choices</code> option lets you restrict a field's value to a predefined set of options. It's commonly used with <code>CharField</code> or <code>IntegerField</code>.</p>
+    
+    <h3>Definition</h3>
+    <p><code>choices</code> is a list (or tuple) of pairs <code>(value, label)</code> used to:</p>
+    <ul>
+        <li>Limit what values a field can take</li>
+        <li>Show a human-readable label in forms or the admin panel</li>
+    </ul>
+    
+    <h3>Example 1: Basic Choices</h3>
+    <pre><code>class Student(models.Model):
+    YEAR_IN_SCHOOL_CHOICES = [
+        ('FR', 'Freshman'),
+        ('SO', 'Sophomore'),
+        ('JR', 'Junior'),
+        ('SR', 'Senior'),
+        ('GR', 'Graduate'),
+    ]
+    
+    name = models.CharField(max_length=100)
+    year_in_school = models.CharField(
+        max_length=2,
+        choices=YEAR_IN_SCHOOL_CHOICES,
+        default='FR'
+    )
+    
+    def __str__(self):
+        return f"{self.name} - {self.get_year_in_school_display()}"</code></pre>
+    
+    <h3>Example 2: Using TextChoices (Django 3.0+)</h3>
+    <pre><code>class Student(models.Model):
+    class YearInSchool(models.TextChoices):
+        FRESHMAN = 'FR', 'Freshman'
+        SOPHOMORE = 'SO', 'Sophomore'
+        JUNIOR = 'JR', 'Junior'
+        SENIOR = 'SR', 'Senior'
+        GRADUATE = 'GR', 'Graduate'
+    
+    name = models.CharField(max_length=100)
+    year_in_school = models.CharField(
+        max_length=2,
+        choices=YearInSchool.choices,
+        default=YearInSchool.FRESHMAN
+    )
+
+# Usage
+student = Student.objects.get(pk=1)
+print(student.year_in_school)  # 'FR'
+print(student.get_year_in_school_display())  # 'Freshman'</code></pre>
+    
+    <h3>Example 3: Integer Choices</h3>
+    <pre><code>class Order(models.Model):
+    class Status(models.IntegerChoices):
+        PENDING = 1, 'Pending'
+        PROCESSING = 2, 'Processing'
+        SHIPPED = 3, 'Shipped'
+        DELIVERED = 4, 'Delivered'
+        CANCELLED = 5, 'Cancelled'
+    
+    order_number = models.CharField(max_length=50)
+    status = models.IntegerField(
+        choices=Status.choices,
+        default=Status.PENDING
+    )</code></pre>
+    
+    <div class="tip">
+        <strong>Best Practice:</strong> Use <code>TextChoices</code> or <code>IntegerChoices</code> (Django 3.0+) for cleaner, more maintainable code.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section27'>27. Django Serialization</h2>
+    
+    <h3>What is Serialization?</h3>
+    <p>Django's serialization framework allows you to convert your model instances (QuerySets or single objects) into a format that can be easily stored, transferred, or rendered, like JSON, XML, or YAML.</p>
+    
+    <h3>Common Use Cases</h3>
+    <ul>
+        <li>Sending data as JSON in an API</li>
+        <li>Writing serialized data to a file</li>
+        <li>Data migrations</li>
+        <li>Returning JSON in Django views</li>
+    </ul>
+    
+    <h3>Basic Serialization</h3>
+    <pre><code>from django.core import serializers
+
+# Serialize all objects
+data = serializers.serialize("json", SomeModel.objects.all())
+
+# Serialize a single object (must be in a list)
+obj = MyModel.objects.first()
+data = serializers.serialize('json', [obj])
+
+# Write to file
+with open('data.json', 'w') as f:
+    f.write(data)</code></pre>
+    
+    <h3>Serialize Specific Fields Only</h3>
+    <pre><code>data = serializers.serialize(
+    "json", 
+    SomeModel.objects.all(), 
+    fields=["name", "size", "price"]
+)</code></pre>
+    
+    <h3>Deserialization</h3>
+    <pre><code>from django.core import serializers
+
+# Load from JSON string or file
+for obj in serializers.deserialize('json', data):
+    print(obj)         # &lt;DeserializedObject: MyModel(1)&gt;
+    print(obj.object)  # Access the actual model instance
+    obj.save()         # Save to database</code></pre>
+    
+    <h3>Use in Views</h3>
+    <pre><code>from django.http import HttpResponse
+from django.core import serializers
+
+def get_products(request):
+    data = serializers.serialize('json', Product.objects.all())
+    return HttpResponse(data, content_type='application/json')</code></pre>
+    
+    <div class="note">
+        <strong>Note:</strong> For complex API development, consider using Django REST Framework (DRF) which provides more powerful serialization features.
+    </div>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section28'>28. Natural Keys in Django</h2>
+    
+    <h3>What Are Natural Keys?</h3>
+    <p>A natural key is an alternative way to represent and identify an object using meaningful field(s) instead of its numeric primary key (ID).</p>
+    
+    <p><strong>Example:</strong></p>
+    <ul>
+        <li>Instead of: <code>"id": 42</code></li>
+        <li>Use: <code>"username": "karthik_s"</code></li>
+    </ul>
+    
+    <h3>Why Do We Need Natural Keys?</h3>
+    <p>When Django serializes related models (ForeignKey, OneToOne, ManyToMany), by default it stores the primary key (integer ID) of related objects.</p>
+    
+    <p><strong>Problems with IDs:</strong></p>
+    <ul>
+        <li>IDs change between different environments (local vs production)</li>
+        <li>IDs change during migrations</li>
+        <li>Fixtures break when IDs don't match</li>
+    </ul>
+    
+    <div class="important">
+        <strong>Common Error:</strong>
+        <pre><code>django.db.utils.IntegrityError: Problem installing fixture: 
+Could not load myapp.Book(pk=1): 
+Foreign key constraint failed, Author with pk=5 does not exist</code></pre>
+    </div>
+    
+    <h3>Example: Without Natural Keys</h3>
+    <pre><code># models.py
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+# Serialization
+data = serializers.serialize('json', Book.objects.all())</code></pre>
+    
+    <p><strong>Output:</strong></p>
+    <pre><code>[
+  {
+    "model": "myapp.book",
+    "pk": 1,
+    "fields": {
+      "title": "Django Deep Dive",
+      "author": 2
+    }
+  }
+]</code></pre>
+    
+    <p><strong>Problem:</strong> We have no idea who <code>author: 2</code> is, and this will break if Author IDs change.</p>
+    
+    <h3>Example: With Natural Keys</h3>
+    
+    <h4>Step 1: Define custom manager with get_by_natural_key</h4>
+    <pre><code>class AuthorManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)</code></pre>
+    
+    <h4>Step 2: Add natural_key() method to the model</h4>
+    <pre><code>class Author(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    objects = AuthorManager()
+    
+    def natural_key(self):
+        return (self.name,)</code></pre>
+    
+    <p>This tells Django:</p>
+    <ul>
+        <li>How to represent an Author naturally (by its name)</li>
+        <li>How to retrieve it during deserialization</li>
+    </ul>
+    
+    <h4>Step 3: Serialize with use_natural_primary_keys=True</h4>
+    <pre><code>data = serializers.serialize(
+    'json',
+    Book.objects.all(),
+    use_natural_primary_keys=True
+)</code></pre>
+    
+    <p><strong>Output:</strong></p>
+    <pre><code>[
+  {
+    "model": "myapp.book",
+    "pk": 1,
+    "fields": {
+      "title": "Django Deep Dive",
+      "author": ["Karthik"]
+    }
+  }
+]</code></pre>
+    
+    <p>✅ Now <code>"author": ["Karthik"]</code> makes sense and will still work if IDs change!</p>
+    
+    <h3>Deserialization with Natural Keys</h3>
+    <p>When Django loads this JSON, it will:</p>
+    <ol>
+        <li>See <code>"author": ["Karthik"]</code></li>
+        <li>Call <code>Author.objects.get_by_natural_key("Karthik")</code></li>
+        <li>Retrieve the Author record safely without needing the primary key</li>
+    </ol>
+    
+    <h3>Command-Line Usage</h3>
+    <pre><code># Export with natural keys
+python manage.py dumpdata myapp --natural-foreign --natural-primary &gt; mydata.json
+
+# Import
+python manage.py loaddata mydata.json</code></pre>
+    
+    <p><strong>Flags:</strong></p>
+    <ul>
+        <li><code>--natural-foreign</code>: Use natural keys for foreign key fields</li>
+        <li><code>--natural-primary</code>: Use natural keys for primary keys</li>
+    </ul>
+    
+    <h3>Composite Natural Keys</h3>
+    <p>Sometimes one field isn't enough to uniquely identify an object. You can use multiple fields:</p>
+    
+    <pre><code>class CityManager(models.Manager):
+    def get_by_natural_key(self, name, country):
+        return self.get(name=name, country=country)
+
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    objects = CityManager()
+    
+    def natural_key(self):
+        return (self.name, self.country)
+
+# Serialized as: ["Hyderabad", "India"]</code></pre>
+    
+    <h3>Full Example: Author, Book, and Publisher</h3>
+    <pre><code>class PublisherManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    objects = PublisherManager()
+    
+    def natural_key(self):
+        return (self.name,)
+
+
+class AuthorManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+class Author(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    objects = AuthorManager()
+    
+    def natural_key(self):
+        return (self.name,)
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)</code></pre>
+    
+    <p><strong>Serialization output:</strong></p>
+    <pre><code>[
+  {
+    "model": "myapp.book",
+    "pk": 1,
+    "fields": {
+      "title": "Django Secrets",
+      "author": ["Karthik"],
+      "publisher": ["Nxtwave Publications"]
+    }
+  }
+]</code></pre>
+    
+    <h3>Things to Keep in Mind</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Concept</th>
+                <th>Explanation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>natural_key()</code></td>
+                <td>Returns a tuple representing the object's unique identity</td>
+            </tr>
+            <tr>
+                <td><code>get_by_natural_key()</code></td>
+                <td>Used by Django when deserializing</td>
+            </tr>
+            <tr>
+                <td>Must be unique</td>
+                <td>Natural key fields must uniquely identify each record</td>
+            </tr>
+            <tr>
+                <td>Use in fixtures</td>
+                <td>Ideal for fixtures to make them portable</td>
+            </tr>
+            <tr>
+                <td>Optional</td>
+                <td>Natural keys are not mandatory; they're an enhancement</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="section-break"></div>
+    
+    <h2 id='section29'>29. Summary: Key Concepts</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Concept</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ORM</strong></td>
+                <td>Write Python instead of SQL</td>
+            </tr>
+            <tr>
+                <td><strong>Models</strong></td>
+                <td>Python classes that map to database tables</td>
+            </tr>
+            <tr>
+                <td><strong>Migrations</strong></td>
+                <td>Sync models with database</td>
+            </tr>
+            <tr>
+                <td><strong>QuerySets</strong></td>
+                <td>Lazy-evaluated database queries</td>
+            </tr>
+            <tr>
+                <td><strong>Q Objects</strong></td>
+                <td>Complex query logic (OR, AND, NOT)</td>
+            </tr>
+            <tr>
+                <td><strong>F Expressions</strong></td>
+                <td>Compare/compute fields</td>
+            </tr>
+            <tr>
+                <td><strong>Aggregation</strong></td>
+                <td>Summary statistics (aggregate/annotate)</td>
+            </tr>
+            <tr>
+                <td><strong>Optimization</strong></td>
+                <td>Use select_related, prefetch_related, bulk operations</td>
+            </tr>
+            <tr>
+                <td><strong>Relationships</strong></td>
+                <td>Forward (child→parent), Backward (parent→children)</td>
+            </tr>
+            <tr>
+                <td><strong>Choices</strong></td>
+                <td>Restrict field values to predefined options</td>
+            </tr>
+            <tr>
+                <td><strong>Serialization</strong></td>
+                <td>Convert models to JSON/XML for APIs and data transfer</td>
+            </tr>
+            <tr>
+                <td><strong>Natural Keys</strong></td>
+                <td>Use meaningful fields instead of IDs for portable data</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="tip" style="margin-top: 30pt; padding: 20pt; text-align: center;">
+        <h2 style="margin: 0; color: #17a2b8;">Happy Django Coding! 🚀</h2>
+        <p style="margin-top: 10pt; font-size: 11pt;">Keep this guide handy as your comprehensive Django reference</p>
+    </div>
+    
+    <div style="margin-top: 40pt; padding-top: 20pt; border-top: 2px solid #0c4b33; text-align: center; color: #666; font-size: 9pt;">
+        <p><strong>Django Learning Guide - Complete Edition</strong></p>
+        <p>Comprehensive Reference for Django Development</p>
+        <p>Covers: ORM, Models, Queries, Optimization, Serialization, and Advanced Topics</p>
+        <p style="margin-top: 10pt;">For latest updates, visit: <a href="https://docs.djangoproject.com" target="_blank">docs.djangoproject.com</a></p>
+    </div>
+    
+</body>
+</html>
